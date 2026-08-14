@@ -1,0 +1,23 @@
+# Dependencies and generated output
+node_modules/
+.pnpm-store/
+lib/
+coverage/
+*.tgz
+
+# Local Harness verification
+.dsh-test/
+
+# Logs and environment files
+*.log
+npm-debug.log*
+pnpm-debug.log*
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db

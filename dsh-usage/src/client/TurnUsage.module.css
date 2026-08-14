@@ -1,0 +1,32 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: 4px;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+  line-height: 20px;
+  white-space: nowrap;
+}
+
+.metric {
+  display: inline-flex;
+  align-items: baseline;
+}
+
+.separator {
+  color: var(--dsw-alias-label-quaternary, var(--dsw-alias-label-tertiary));
+}
+
+@media (max-width: 880px) {
+  .output {
+    display: none;
+  }
+}
+
+@media (max-width: 1100px) {
+  .cost {
+    display: none;
+  }
+}

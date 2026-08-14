@@ -1,0 +1,18 @@
+{
+  "name": "dsh-plugins",
+  "version": "0.0.0",
+  "private": true,
+  "description": "DeepSeek Harness plugin monorepo",
+  "packageManager": "pnpm@11.7.0",
+  "engines": {
+    "node": ">=22.14.0",
+    "pnpm": ">=11 <12"
+  },
+  "scripts": {
+    "check": "pnpm --recursive --if-present run check",
+    "pack:check": "pnpm --recursive --if-present run pack:check",
+    "repo:sync": "node scripts/sync-repository.mjs",
+    "release:resolve": "node scripts/resolve-release.mjs"
+  },
+  "license": "MIT"
+}

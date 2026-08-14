@@ -1,0 +1,20 @@
+- insert:
+    - id: usage
+      name: dsh-usage
+      config:
+        currency: USD
+        rates:
+          - provider: deepseek-official
+            model: deepseek-v4-flash
+            effectiveFrom: '2026-04-24T00:00:00.000Z'
+            uncachedInput: 0.14
+            cacheRead: 0.0028
+            cacheWrite: 0.14
+            output: 0.28
+          - provider: deepseek-official
+            model: deepseek-v4-pro
+            effectiveFrom: '2026-04-24T00:00:00.000Z'
+            uncachedInput: 0.435
+            cacheRead: 0.003625
+            cacheWrite: 0.435
+            output: 0.87

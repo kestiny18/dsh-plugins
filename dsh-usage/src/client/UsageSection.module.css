@@ -1,0 +1,242 @@
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  max-width: 720px;
+  color: var(--dsw-alias-label-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.headingRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.intro {
+  margin: 2px 0 0;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.scopeField {
+  flex: none;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  width: 180px;
+}
+
+.scopeLabel,
+.statLabel {
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.select {
+  width: 100%;
+  height: 32px;
+  padding: 0 28px 0 10px;
+  box-sizing: border-box;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 8px;
+  background: var(--dsw-alias-bg-layer-2);
+  color: var(--dsw-alias-label-primary);
+  font: inherit;
+  font-size: 13px;
+}
+
+.select:focus-visible {
+  outline: 2px solid var(--dsw-alias-state-business-primary);
+  outline-offset: 1px;
+}
+
+.usageCard {
+  overflow: hidden;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 12px;
+  background: var(--dsw-alias-bg-layer-2);
+}
+
+.summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-bottom: 1px solid var(--dsw-alias-border-l2);
+}
+
+.stat {
+  display: flex;
+  min-width: 0;
+  min-height: 68px;
+  padding: 11px 13px;
+  box-sizing: border-box;
+  flex-direction: column;
+  justify-content: space-between;
+  border-right: 1px solid var(--dsw-alias-border-l2);
+  border-bottom: 1px solid var(--dsw-alias-border-l2);
+}
+
+.stat:nth-child(3n) {
+  border-right: none;
+}
+
+.stat:nth-last-child(-n + 3) {
+  border-bottom: none;
+}
+
+.statValue {
+  overflow: hidden;
+  color: var(--dsw-alias-label-primary);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 24px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.costValue {
+  font-size: 14px;
+}
+
+.note {
+  margin: 10px 13px -2px;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.groupTitle {
+  margin: 4px 0 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 22px;
+}
+
+.columnHead,
+.detailRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 76px 112px;
+  gap: 10px;
+  align-items: center;
+}
+
+.columnHead {
+  padding: 0 12px;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.columnHead span:not(:first-child) {
+  text-align: right;
+}
+
+.details {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  border: 1px solid var(--dsw-alias-border-l2);
+  border-radius: 12px;
+  list-style: none;
+}
+
+.detailRow {
+  min-height: 54px;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  border-bottom: 1px solid var(--dsw-alias-border-l2);
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+}
+
+.detailIdentity {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+}
+
+.detailTitle,
+.detailSubtitle {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detailTitle {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.detailSubtitle {
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 11px;
+  line-height: 18px;
+}
+
+.detailNumber,
+.detailCost {
+  overflow: hidden;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.detailCost {
+  color: var(--dsw-alias-label-secondary, var(--dsw-alias-label-primary));
+}
+
+.unit {
+  color: var(--dsw-alias-label-tertiary);
+}
+
+.empty {
+  margin: 20px 0 0;
+  padding: 24px;
+  border: 1px dashed var(--dsw-alias-border-l2);
+  border-radius: 12px;
+  color: var(--dsw-alias-label-tertiary);
+  font-size: 13px;
+  line-height: 20px;
+  text-align: center;
+}
+
+@media (max-width: 720px) {
+  .headingRow {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .scopeField {
+    width: 100%;
+  }
+
+  .columnHead,
+  .detailRow {
+    grid-template-columns: minmax(0, 1fr) 64px 94px;
+  }
+
+  .unit {
+    display: none;
+  }
+}
