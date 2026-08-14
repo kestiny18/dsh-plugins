@@ -14,7 +14,8 @@ All notable changes to this project are documented in this file. The format is b
 ### Changed
 
 - Reworked installation documentation to remove machine-specific paths.
-- Added copy-and-paste npx installation commands that do not require a globally installed `dsh` or pnpm.
+- Added a user-focused quick start, upgrade instructions, troubleshooting, and copy-and-paste npx commands that do not require a globally installed `dsh` or pnpm.
+- Raised the supported Node.js 22 baseline to 22.18 to match the build toolchain.
 - Organized `dsh-usage` as an independently published package in the `dsh-plugins` monorepo.
 
 ## [0.1.0] - 2026-08-14

@@ -4,7 +4,7 @@ Thanks for improving the `dsh-plugins` monorepo.
 
 ## Prerequisites
 
-- Node.js 22.14 or newer
+- Node.js 22.18 or newer
 - pnpm 11
 - A DeepSeek Harness checkout for optional end-to-end plugin verification
 

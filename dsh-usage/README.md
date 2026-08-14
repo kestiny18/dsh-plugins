@@ -1,12 +1,26 @@
 # dsh-usage
 
-`dsh-usage` is a DeepSeek Harness bundle that derives per-turn model usage and per-session estimated fees from the durable session log. It adds a `modelCost` session projection, an always-visible per-turn readout in the Web conversation footer, and a complete Usage section in Settings.
+Token usage, estimated model cost, and a 52-week activity heatmap for DeepSeek Harness Web.
 
-The plugin prices four disjoint Harness usage buckets: uncached input, cache read, cache write, and output. Reasoning tokens are already included in output and are never charged twice. Price schedules are effective-dated, so replay uses the rate active when each event was recorded instead of rewriting historical cost with today's price.
+[npm](https://www.npmjs.com/package/dsh-usage) · [Source](https://github.com/kestiny18/dsh-plugins/tree/main/dsh-usage) · [Discussion](https://github.com/deepseek-ai/deepseek-harness/discussions/1169)
 
-## Install from npm
+`dsh-usage` adds:
 
-If you run Harness through `npx`, the first command makes both the Harness CLI and the pnpm version required by the plugin manager available for the installation. None of these commands requires a global installation:
+- a compact `Total · Input · Cache · Output · Cost` summary below every completed turn;
+- a full **Settings → Usage** page;
+- totals by model, session, and turn;
+- a GitHub-style 52-week activity heatmap;
+- provider-neutral token accounting and optional estimated cost.
+
+It reads Harness's durable session log and does not create a separate usage database. Any model or provider that reports standard usage data can contribute token totals. Cost is shown only when a matching price is configured.
+
+## Quick start
+
+Requirements: Node.js 22.18 or newer and an existing DeepSeek Harness Web profile.
+
+### Using Harness through npx
+
+Copy and run these commands from PowerShell, Command Prompt, or a terminal. No global `dsh` or pnpm installation is required:
 
 ```powershell
 npx --yes --package=@deepseek-ai/dsh --package=pnpm@11.7.0 -- dsh plugin --profile web add dsh-usage
@@ -14,7 +28,16 @@ npx --yes @deepseek-ai/dsh --profile web --dump-config
 npx --yes @deepseek-ai/dsh --profile web
 ```
 
-If `dsh` and pnpm are already installed globally, the shorter equivalent is:
+Then open the Harness Web URL printed in the terminal. Complete one model response and check:
+
+- the usage summary below the assistant response;
+- **Settings → Usage** for totals and the 52-week heatmap.
+
+The first installation requires restarting Harness so that its Web client discovers the plugin.
+
+### Using a globally installed dsh
+
+If both `dsh` and pnpm are available on your `PATH`, use the shorter commands from the [original announcement](https://github.com/deepseek-ai/deepseek-harness/discussions/1169):
 
 ```powershell
 dsh plugin --profile web add dsh-usage
@@ -22,7 +45,9 @@ dsh --profile web --dump-config
 dsh --profile web
 ```
 
-If you run the CLI from a DeepSeek Harness source checkout, run the same commands from that checkout with `pnpm dsh`:
+### Running from a Harness source checkout
+
+Run these commands inside the DeepSeek Harness repository:
 
 ```powershell
 pnpm dsh plugin --profile web add dsh-usage
@@ -30,7 +55,17 @@ pnpm dsh --profile web --dump-config
 pnpm dsh --profile web
 ```
 
-## Install from a source checkout
+### Upgrade
+
+Run the same `plugin add` command again, then restart Harness:
+
+```powershell
+npx --yes --package=@deepseek-ai/dsh --package=pnpm@11.7.0 -- dsh plugin --profile web add dsh-usage
+```
+
+If `dsh` is not recognized, use the npx command above instead of the global-install form. If the Usage page does not appear after installation, stop and restart the running Harness process.
+
+## Develop from this repository
 
 Install dependencies from the monorepo root, then build and verify this package:
 
@@ -45,7 +80,11 @@ npx --yes @deepseek-ai/dsh --profile web
 
 Alternatively, run `pnpm dsh` from a Harness checkout and replace `.` with the path to your `dsh-usage` package directory. Do not copy a machine-specific absolute path from this README.
 
-The first install (or adding the browser entry to an existing install) requires a Harness restart so the client plugin graph is discovered. During browser development, Harness's `pnpm run dev:web` flow can HMR later source changes.
+During browser development, Harness's `pnpm run dev:web` flow can HMR later source changes after the initial plugin discovery.
+
+## How accounting works
+
+The plugin prices four disjoint Harness usage buckets: uncached input, cache read, cache write, and output. Reasoning tokens are already included in output and are never charged twice. Price schedules are effective-dated, so replay uses the rate active when each event was recorded instead of rewriting historical cost with today's price.
 
 The bundled `cordis.patch.yml` contains the USD prices published for `deepseek-v4-flash` and `deepseek-v4-pro` on 2026-04-24. DeepSeek can change prices; verify the [official pricing page](https://api-docs.deepseek.com/quick_start/pricing/) before relying on the estimate.
 

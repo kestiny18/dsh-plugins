@@ -50,7 +50,7 @@ if (process.env.GITHUB_REF_TYPE === 'tag') {
 }
 
 const [nodeMajor, nodeMinor] = process.versions.node.split('.').map(Number)
-if (nodeMajor < 22 || (nodeMajor === 22 && nodeMinor < 14)) errors.push(`Node.js 22.14 or newer is required, got ${process.versions.node}`)
+if (nodeMajor < 22 || (nodeMajor === 22 && nodeMinor < 18)) errors.push(`Node.js 22.18 or newer is required, got ${process.versions.node}`)
 
 if (process.env.GITHUB_ACTIONS === 'true') {
   const npm = process.platform === 'win32' ? 'npm.cmd' : 'npm'

@@ -5,7 +5,7 @@
   "description": "DeepSeek Harness plugin monorepo",
   "packageManager": "pnpm@11.7.0",
   "engines": {
-    "node": ">=22.14.0",
+    "node": ">=22.18.0",
     "pnpm": ">=11 <12"
   },
   "scripts": {

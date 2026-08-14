@@ -4,7 +4,7 @@
   "description": "Replay-aware per-turn model usage and session cost for DeepSeek Harness",
   "type": "module",
   "engines": {
-    "node": ">=22.14.0",
+    "node": ">=22.18.0",
     "pnpm": ">=11 <12"
   },
   "main": "lib/index.js",
