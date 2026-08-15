@@ -1,0 +1,4 @@
+- insert:
+    - id: redact
+      name: dsh-redact
+      config: {}
