@@ -34,7 +34,7 @@ If the CLI is only available inside a Harness checkout, use `pnpm dsh` there and
 
 ## Pull requests
 
-- Keep changes focused and include tests for accounting or projection behavior.
+- Keep changes focused and include tests for affected plugin behavior.
 - Run `pnpm run check` before opening a pull request.
 - Update the affected package's `CHANGELOG.md` for user-visible changes.
 - Never commit npm tokens, API keys, local Harness profiles, or generated output.
