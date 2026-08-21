@@ -9,6 +9,12 @@ Monorepo for independently published DeepSeek Harness plugins. The repository us
 | [`dsh-redact`](dsh-redact) | Fail-closed canonical tool-output tokenization before model and Session persistence |
 | [`dsh-usage`](dsh-usage) | Replay-aware token usage and estimated model cost for the Harness Web UI |
 
+## Applications
+
+| Application | Description |
+| --- | --- |
+| [`dsh-community`](apps/dsh-community) | Cloudflare Worker + D1 public usage leaderboard and GitHub-linked profiles |
+
 ## Development
 
 ```sh

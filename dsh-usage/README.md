@@ -11,6 +11,7 @@ Token usage, estimated model cost, and a 52-week activity heatmap for DeepSeek H
 - totals by model, session, and turn;
 - a GitHub-style 52-week activity heatmap;
 - provider-neutral token accounting and optional estimated cost.
+- optional aggregate-only DSH Community participation, disabled by default.
 
 It reads Harness's durable session log and does not create a separate usage database. Any model or provider that reports standard usage data can contribute token totals. Cost is shown only when a matching price is configured.
 
@@ -34,6 +35,18 @@ Then open the Harness Web URL printed in the terminal. Complete one model respon
 - **Settings → Usage** for totals and the 52-week heatmap.
 
 The first installation requires restarting Harness so that its Web client discovers the plugin.
+
+### Optional Community Sync
+
+Open **Settings → Usage → DSH Community**. Connecting GitHub identifies your public Community account but does not upload anything. Turn **Community Sync** on separately to send the first full aggregate snapshot and refresh it every 30 minutes.
+
+Community uploads contain UTC daily totals and normalized model totals: request counts plus uncached input, cache read, cache write, and output tokens. They do not contain cost, prompts, responses, session titles, tool content, paths, hostnames, or hardware identifiers. Unknown/private provider-model routes are combined into `other` locally before the request is created.
+
+Forked and sub-Agent sessions are counted from their durable lineage boundary: inherited seed events are subtracted, while the child's new calls—including provider-reported cache reads—remain in the snapshot. Retries use absolute replacement totals and a stable revision/digest, so the Community never adds the same device/day snapshot twice.
+
+Sync failures are shown in settings and never interrupt local session projection, turn footers, cost estimates, or the Usage page. Turning Sync off stops future uploads; V1 does not delete previously accepted Community data.
+
+If Node cannot reach the Community directly, configure the proxy in the environment that launches DSH. Node 22.21+ and Node 24 can use standard `HTTP_PROXY` / `HTTPS_PROXY` variables when `NODE_USE_ENV_PROXY=1` is also set. The plugin does not read or change operating-system proxy settings.
 
 ### Using a globally installed dsh
 
@@ -97,6 +110,7 @@ Every rate is one currency unit per million tokens. Matching is exact on both th
   name: dsh-usage
   config:
     currency: CNY
+    communityUrl: https://community.example.com
     rates:
       - provider: deepseek-official
         model: deepseek-v4-flash

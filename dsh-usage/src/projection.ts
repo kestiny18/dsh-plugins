@@ -238,7 +238,7 @@ function usageOf(event: SessionEvent): TokenUsage | undefined {
   return undefined
 }
 
-function applyEvent(
+export function applyModelCostEvent(
   config: ResolvedModelCostConfig,
   state: ModelCostState,
   event: SessionEvent,
@@ -294,7 +294,7 @@ function applyEvent(
   return state
 }
 
-function view(config: ResolvedModelCostConfig, state: ModelCostState): ModelCostProjection {
+export function viewModelCostState(config: ResolvedModelCostConfig, state: ModelCostState): ModelCostProjection {
   const byModel: ModelCostRouteBreakdown[] = Object.entries(state.byModel)
     .map(([key, value]) => {
       const parsed = JSON.parse(key) as [string, string]
@@ -326,8 +326,19 @@ export function createModelCostProjection(
       byTurn: {},
       byDay: {},
     }),
-    apply: (state, event) => applyEvent(config, state, event),
-    view: state => view(config, state),
+    apply: (state, event) => applyModelCostEvent(config, state, event),
+    view: state => viewModelCostState(config, state),
     stateVersion: config.stateVersion,
   }
+}
+
+/** Fold an immutable event slice without publishing or resuming a Session. */
+export function foldModelCostEvents(
+  config: ResolvedModelCostConfig,
+  events: readonly SessionEvent[],
+): ModelCostProjection {
+  const definition = createModelCostProjection(config)
+  let state = definition.init()
+  for (const event of events) state = definition.apply(state, event)
+  return definition.view(state)
 }

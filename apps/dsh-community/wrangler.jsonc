@@ -1,0 +1,22 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "dsh-community",
+  "main": "src/worker/index.ts",
+  "compatibility_date": "2026-08-21",
+  "assets": {
+    "directory": "./dist/client",
+    "not_found_handling": "single-page-application",
+    "run_worker_first": ["/api/*", "/auth/*"]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "dsh-community",
+      "database_id": "a194fdbf-cdcd-4ddc-8c0f-7201b50c1855",
+      "migrations_dir": "migrations"
+    }
+  ],
+  "vars": {
+    "BASE_URL": "https://dsh-community.yingking1018.workers.dev"
+  }
+}

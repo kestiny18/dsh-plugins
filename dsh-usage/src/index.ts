@@ -3,8 +3,11 @@
 import type { Context } from '@deepseek-ai/cordis'
 import z from '@deepseek-ai/schemastery'
 import type {} from '@deepseek-ai/dsh-session-projection'
+import type {} from '@deepseek-ai/dsh-session-persistence'
+import type {} from '@deepseek-ai/dsh-storage-domain'
 import { resolveConfig } from './pricing.js'
 import { createModelCostProjection } from './projection.js'
+import { CommunityUsageService } from './community/service.js'
 import type { ModelCostConfig, ModelRateConfig } from './types.js'
 
 export type * from './types.js'
@@ -29,10 +32,17 @@ const rateSchema: z<ModelRateConfig> = z.object({
 export const Config: z<ModelCostConfig> = z.object({
   currency: z.string().default('USD'),
   rates: z.array(rateSchema).required(),
+  communityUrl: z.string().default('https://dsh-community.yingking1018.workers.dev'),
 })
 
 /** Register the replay-derived usage and cost projection. */
 export function apply(ctx: Context, config: ModelCostConfig): void {
   const resolved = resolveConfig(config)
   ctx.sessionProjections.register(createModelCostProjection(resolved))
+  const communityUrl = config.communityUrl?.trim() ?? ''
+  void ctx.plugin(CommunityUsageService, {
+    baseUrl: communityUrl.replace(/\/+$/u, ''),
+    pluginVersion: '0.2.0',
+    projection: resolved,
+  })
 }

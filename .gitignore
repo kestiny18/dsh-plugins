@@ -2,8 +2,11 @@
 node_modules/
 .pnpm-store/
 lib/
+dist/
+.wrangler/
 coverage/
 *.tgz
+*.tsbuildinfo
 
 # Local Harness verification
 .dsh-test/

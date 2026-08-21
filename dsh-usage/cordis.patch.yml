@@ -3,6 +3,7 @@
       name: dsh-usage
       config:
         currency: USD
+        communityUrl: https://dsh-community.yingking1018.workers.dev
         rates:
           - provider: deepseek-official
             model: deepseek-v4-flash
