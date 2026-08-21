@@ -11,8 +11,11 @@ import {
 import type { SessionUsageRow } from './usage-view.js'
 import { ActivityHeatmap } from './ActivityHeatmap.js'
 import css from './UsageSection.module.css'
+import { CommunitySettings } from './CommunitySettings.js'
+import type { CommunityClientContext } from '../community/remote.js'
 
 export type UsageSectionProps = PropsRuntime<'settings.section'>
+export type CommunityUsageSectionProps = UsageSectionProps & { communityContext?: CommunityClientContext }
 
 function exactTokens(value: number): string {
   return new Intl.NumberFormat('en-US').format(value)
@@ -51,7 +54,7 @@ function DetailRow({
 }
 
 /** Settings page for all-session and per-session model usage. */
-export function UsageSection({ useSessions }: UsageSectionProps) {
+export function UsageSection({ useSessions, communityContext }: CommunityUsageSectionProps) {
   const sessions = useSessions(state => state)
   const [scope, setScope] = useState('all')
   const sessionRows = useMemo<SessionUsageRow[]>(() => sessions.ids.flatMap((id) => {
@@ -179,6 +182,9 @@ export function UsageSection({ useSessions }: UsageSectionProps) {
             </section>
           </>
         )}
+      {communityContext === undefined
+        ? <p className={css.note}>Community controls are unavailable in this Harness build. Local Usage is unaffected.</p>
+        : <CommunitySettings ctx={communityContext} />}
     </div>
   )
 }

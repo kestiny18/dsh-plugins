@@ -1,2 +1,6 @@
 packages:
   - 'dsh-*'
+  - 'apps/*'
+allowBuilds:
+  esbuild: true
+  workerd: true

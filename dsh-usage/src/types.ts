@@ -24,6 +24,8 @@ export interface ModelCostConfig {
   currency: string
   /** Exact provider/model schedules. */
   rates: ModelRateConfig[]
+  /** Community web origin; GitHub linking and uploads remain opt-in. */
+  communityUrl?: string
 }
 
 /** Four disjoint provider-reported usage buckets. */

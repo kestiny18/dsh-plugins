@@ -1,0 +1,18 @@
+import { useEffect, useMemo, useState } from 'react'
+import { Link, useParams } from 'react-router-dom'
+import { api } from './api.js'
+import type { ProfileResponse } from './api.js'
+import { compact } from './Home.js'
+
+const DAY=86_400_000
+function tokens(row:Record<string,string|number>){return Number(row.uncachedInputTokens??0)+Number(row.cacheReadTokens??0)+Number(row.cacheWriteTokens??0)+Number(row.outputTokens??0)}
+export function Profile(){const {login=''}=useParams();const [data,setData]=useState<ProfileResponse>();const [error,setError]=useState<string>();useEffect(()=>{void api<ProfileResponse>(`/api/v1/users/${encodeURIComponent(login)}`).then(setData).catch(cause=>setError(cause instanceof Error?cause.message:'Profile unavailable'))},[login]);if(error!==undefined)return <section className="staticPage"><span className="kicker">PROFILE</span><h1>{error}</h1><Link to="/">Back to leaderboard</Link></section>;if(data===undefined)return <div className="loadingPage">Loading profile…</div>;return <div className="pageStack profilePage">
+  <div className="profileActions"><Link to="/">← Back to leaderboard</Link><button onClick={()=>void navigator.clipboard.writeText(window.location.href)}>Share link</button></div>
+  <section className="profileHeader"><div><img src={data.identity.avatarUrl} alt=""/><span><h1>{data.identity.displayName}</h1><a href={data.identity.githubUrl}>@{data.identity.githubLogin} ↗</a></span></div><aside><strong>{compact(data.windows.find(item=>item.period==='all')?.totalTokens??0)}</strong><span>Total tokens</span></aside></section>
+  <section className="windowGrid">{data.windows.map(item=><div key={item.period}><span>{item.period==='today'?'Today':item.period==='7d'?'7 Days':item.period==='30d'?'30 Days':'All Time'}</span><strong>{compact(item.totalTokens)}</strong><small>{item.rank===null?'Unranked':`#${item.rank}`}</small></div>)}</section>
+  <section className="profileData"><div className="heatmapCard"><h2>Token usage · 52 weeks</h2><Heatmap days={data.days}/></div><div className="modelCard"><h2>Model mix</h2><ModelMix models={data.models}/></div></section>
+  <p className="selfReported">Self-reported aggregate usage · UTC days · prompts and messages are never included.</p>
+ </div>}
+
+function Heatmap({days}:{days:ProfileResponse['days']}){const cells=useMemo(()=>{const map=new Map(days.map(row=>[String(row.day),tokens(row)]));const today=new Date();const end=Date.UTC(today.getUTCFullYear(),today.getUTCMonth(),today.getUTCDate());const start=end-363*DAY;const values=Array.from({length:364},(_,index)=>{const day=new Date(start+index*DAY).toISOString().slice(0,10);return{day,value:map.get(day)??0}});const max=Math.max(...values.map(item=>item.value),1);return values.map(item=>({...item,level:item.value===0?0:Math.max(1,Math.ceil(item.value/max*4))}))},[days]);return <div><div className="heatmap" aria-label="Daily token usage heatmap">{cells.map(cell=><span key={cell.day} className={`heat level${cell.level}`} title={`${cell.day}: ${cell.value.toLocaleString()} tokens`}/>)}</div><div className="heatLegend"><span>Less</span>{[0,1,2,3,4].map(level=><i key={level} className={`heat level${level}`}/>)}<span>More</span></div></div>}
+function ModelMix({models}:{models:ProfileResponse['models']}){const max=Math.max(...models.map(tokens),1);return <div className="modelList">{models.length===0?<span>No model data yet.</span>:models.map(row=>{const value=tokens(row);return <div key={`${String(row.provider)}/${String(row.model)}`}><p><span>{String(row.model)}</span><small>{compact(value)}</small></p><div><i style={{width:`${String(Math.max(2,value/max*100))}%`}}/></div><small>{String(row.provider)}</small></div>})}</div>}
