@@ -2,6 +2,8 @@
 
 Public DSH aggregate-usage leaderboard and GitHub-linked profile application. It is a private workspace app, not an npm package.
 
+Production origin: [https://dshcommunity.com](https://dshcommunity.com). The `workers.dev` origin remains available as a compatibility endpoint for older plugin clients.
+
 ## V1 behavior
 
 - `/` is public and defaults to the rolling 7-day UTC leaderboard.

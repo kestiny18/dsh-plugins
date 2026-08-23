@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Link, NavLink, Route, Routes, useLocation } from 'react-router-dom'
 import { api } from './api.js'
-import type { MeResponse } from './api.js'
-import type { PublicConfig } from './api.js'
+import type { MeResponse, PublicConfig } from './api.js'
 import { Home } from './Home.js'
 import { Profile } from './Profile.js'
 import { LinkDevice } from './LinkDevice.js'
 import { About, Privacy } from './StaticPages.js'
+import { useI18n } from './i18n.js'
 
 export function App() {
   const [me, setMe] = useState<MeResponse>({ authenticated: false })
   const [configuration, setConfiguration] = useState<PublicConfig>({ githubAuthConfigured: false })
   const location = useLocation()
+  const { zh, language, setLanguage } = useI18n()
   useEffect(() => { void api<MeResponse>('/api/v1/me').then(setMe).catch(() => setMe({ authenticated: false })) }, [location.key])
   useEffect(() => { void api<PublicConfig>('/api/v1/config').then(setConfiguration) }, [])
 
@@ -24,12 +25,13 @@ export function App() {
   return <div className="appShell">
     <header className="siteHeader"><div className="headerInner">
       <Link className="brand" to="/"><img src="/logo.svg" alt=""/><strong>DSH Community</strong><span>BETA</span></Link>
-      <nav><NavLink to="/">Leaderboard</NavLink><NavLink to="/about">About</NavLink></nav>
+      <nav><NavLink to="/">{zh ? '排行榜' : 'Leaderboard'}</NavLink><NavLink to="/about">{zh ? '关于' : 'About'}</NavLink></nav>
+      <button className="languageSwitch" type="button" aria-label={zh ? 'Switch to English' : '切换为中文'} onClick={() => { setLanguage(language === 'zh' ? 'en' : 'zh') }}>{zh ? 'EN' : '中文'}</button>
       {me.authenticated && me.identity !== undefined
-        ? <div className="account"><Link to={`/u/${me.identity.githubLogin}`}><img src={me.identity.avatarUrl} alt=""/><span>@{me.identity.githubLogin}</span></Link><button onClick={() => { void signOut() }}>Sign out</button></div>
+        ? <div className="account"><Link to={`/u/${me.identity.githubLogin}`}><img src={me.identity.avatarUrl} alt=""/><span>@{me.identity.githubLogin}</span></Link><button onClick={() => { void signOut() }}>{zh ? '退出' : 'Sign out'}</button></div>
         : configuration.githubAuthConfigured
-          ? <a className="githubButton" href={`/auth/github/start?returnTo=${encodeURIComponent(location.pathname + location.search)}`}><GithubIcon/>Sign in with GitHub</a>
-          : <span className="githubButton pending" title="GitHub OAuth credentials have not been configured"><GithubIcon/>GitHub setup pending</span>}
+          ? <a className="githubButton" href={`/auth/github/start?returnTo=${encodeURIComponent(location.pathname + location.search)}`}><GithubIcon/>{zh ? '使用 GitHub 登录' : 'Sign in with GitHub'}</a>
+          : <span className="githubButton pending" title={zh ? 'GitHub OAuth 尚未配置' : 'GitHub OAuth credentials have not been configured'}><GithubIcon/>{zh ? 'GitHub 配置中' : 'GitHub setup pending'}</span>}
     </div></header>
     <main><Routes>
       <Route path="/" element={<Home me={me}/>} />
@@ -37,9 +39,9 @@ export function App() {
       <Route path="/link" element={<LinkDevice me={me}/>} />
       <Route path="/about" element={<About/>} />
       <Route path="/privacy" element={<Privacy/>} />
-      <Route path="*" element={<section className="staticPage"><span className="kicker">404</span><h1>That page is off the map.</h1><Link className="primaryButton" to="/">Back to leaderboard</Link></section>} />
+      <Route path="*" element={<section className="staticPage"><span className="kicker">404</span><h1>{zh ? '这个页面不在地图上。' : 'That page is off the map.'}</h1><Link className="primaryButton" to="/">{zh ? '返回排行榜' : 'Back to leaderboard'}</Link></section>} />
     </Routes></main>
-    <footer><div><span>DSH Community · self-reported aggregate usage</span><nav><Link to="/about">About</Link><Link to="/privacy">Privacy</Link><a href="https://github.com/kestiny18/dsh-plugins">GitHub</a></nav></div></footer>
+    <footer><div><span>{zh ? 'DSH Community · 用户自报聚合用量' : 'DSH Community · self-reported aggregate usage'}</span><nav><Link to="/about">{zh ? '关于' : 'About'}</Link><Link to="/privacy">{zh ? '隐私' : 'Privacy'}</Link><a href="https://github.com/kestiny18/dsh-plugins">GitHub</a></nav></div></footer>
   </div>
 }
 
