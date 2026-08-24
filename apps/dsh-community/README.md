@@ -11,8 +11,8 @@ Production origin: [https://dshcommunity.com](https://dshcommunity.com). The `wo
 - GitHub login personalizes the board and provides a fixed **Your standing** panel; login alone never starts uploading.
 - Plugin device linking enters GitHub OAuth directly, then returns to the explicit device confirmation page.
 - Signing out from the plugin revokes only that installation's credential and preserves its accepted aggregate rows.
-- Device/day and device/provider/model keys use absolute upsert semantics. A matching revision and digest is idempotent, a matching revision with another digest conflicts, and older revisions are rejected.
-- Omitted keys are retained in V1. There is no remote delete/Leave flow yet.
+- Device/day and device/provider/model keys use absolute replacement semantics. A matching revision and digest is idempotent, a matching revision with another digest conflicts, and older revisions are rejected.
+- After a newer revision is accepted, day/model keys omitted from that device's complete snapshot are removed in the same D1 transaction. This protocol replacement is separate from a user-facing delete/Leave flow, which V1 does not provide.
 - Rankings are explicitly self-reported. Cost, prompts, responses, session metadata, and private model routes are not accepted.
 
 ## Local setup (PowerShell)
@@ -36,10 +36,13 @@ pnpm --filter dsh-community run dev
 
 Create a GitHub OAuth App with:
 
-- Homepage URL: the value of `BASE_URL`.
+- Application name: `DSH Community`.
+- Homepage URL: the value of `BASE_URL` (`https://dshcommunity.com` in production).
+- Application description: `Optional public aggregate Token usage for DeepSeek Harness. Reads public GitHub profile identity only; connecting does not enable data sync.`
 - Authorization callback URL: `<BASE_URL>/auth/github/callback`.
+- Device Flow: disabled.
 
-The Worker uses OAuth state and PKCE, stores only the short-lived attempt, fetches the GitHub identity server-side, and does not retain the GitHub access token.
+The Worker uses OAuth state and PKCE, requests no additional OAuth scopes, stores only the short-lived attempt, fetches the public GitHub identity server-side, and does not retain the GitHub access token.
 
 ## Cloudflare deployment
 

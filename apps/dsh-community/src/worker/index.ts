@@ -270,7 +270,6 @@ async function oauthStart(request: Request, env: Env): Promise<Response> {
   authorize.searchParams.set('state', state)
   authorize.searchParams.set('code_challenge', await pkceChallenge(verifier))
   authorize.searchParams.set('code_challenge_method', 'S256')
-  authorize.searchParams.set('scope', 'read:user')
   return redirect(authorize.toString(), { 'set-cookie': cookie('dsh_oauth_state', state, 600) })
 }
 
@@ -440,10 +439,18 @@ async function acceptSnapshot(request: Request, env: Env): Promise<Response> {
       cache_write_tokens=excluded.cache_write_tokens,output_tokens=excluded.output_tokens,revision=excluded.revision,updated_at=excluded.updated_at
       WHERE excluded.revision>model_usage.revision
   `).bind(device.id, row.provider, row.model, row.requests, row.usageUnavailableRequests, row.uncachedInputTokens, row.cacheReadTokens, row.cacheWriteTokens, row.outputTokens, snapshot.revision, now))
+  statements.push(env.DB.prepare('DELETE FROM daily_usage WHERE device_id=? AND revision<?')
+    .bind(device.id, snapshot.revision))
+  statements.push(env.DB.prepare('DELETE FROM model_usage WHERE device_id=? AND revision<?')
+    .bind(device.id, snapshot.revision))
   statements.push(env.DB.prepare('UPDATE devices SET accepted_revision=?,snapshot_digest=?,last_synced_at=?,updated_at=? WHERE id=? AND accepted_revision<?')
     .bind(snapshot.revision, snapshot.snapshotDigest, now, now, device.id, snapshot.revision))
   const nonzero = [...snapshot.dailyUsage, ...snapshot.modelUsage].some(row => row.requests > 0 || row.uncachedInputTokens + row.cacheReadTokens + row.cacheWriteTokens + row.outputTokens > 0)
-  if (nonzero) statements.push(env.DB.prepare('UPDATE users SET profile_public=1,updated_at=? WHERE id=?').bind(now, device.userId))
+  if (nonzero) statements.push(env.DB.prepare(`
+    UPDATE users SET profile_public=1,updated_at=? WHERE id=? AND EXISTS (
+      SELECT 1 FROM devices WHERE id=? AND accepted_revision=? AND snapshot_digest=?
+    )
+  `).bind(now, device.userId, device.id, snapshot.revision, snapshot.snapshotDigest))
   await env.DB.batch(statements)
   const accepted = await env.DB.prepare('SELECT accepted_revision,snapshot_digest FROM devices WHERE id=?').bind(device.id).first<{ accepted_revision: number; snapshot_digest: string | null }>()
   if (accepted?.accepted_revision !== snapshot.revision || accepted.snapshot_digest !== snapshot.snapshotDigest) {
