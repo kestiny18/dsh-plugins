@@ -32,7 +32,7 @@ const rateSchema: z<ModelRateConfig> = z.object({
 export const Config: z<ModelCostConfig> = z.object({
   currency: z.string().default('USD'),
   rates: z.array(rateSchema).required(),
-  communityUrl: z.string().default('https://dsh-community.yingking1018.workers.dev'),
+  communityUrl: z.string().default('https://dshcommunity.com'),
 })
 
 /** Register the replay-derived usage and cost projection. */

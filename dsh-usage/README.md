@@ -38,7 +38,7 @@ The first installation requires restarting Harness so that its Web client discov
 
 ### Optional Community Sync
 
-Open **Settings → Usage → DSH Community**. Connecting GitHub identifies your public Community account but does not upload anything. Turn **Community Sync** on separately to send the first full aggregate snapshot and refresh it every 30 minutes.
+Visit [dshcommunity.com](https://dshcommunity.com) for the public leaderboard and illustrated setup guide. Open **Settings → Usage → DSH Community**. Connecting GitHub identifies your public Community account but does not upload anything. Turn **Community Sync** on separately to send the first full aggregate snapshot and refresh it every 30 minutes.
 
 Community uploads contain UTC daily totals and normalized model totals: request counts plus uncached input, cache read, cache write, and output tokens. They do not contain cost, prompts, responses, session titles, tool content, paths, hostnames, or hardware identifiers. Unknown/private provider-model routes are combined into `other` locally before the request is created.
 

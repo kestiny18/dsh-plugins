@@ -3,6 +3,7 @@
   "name": "dsh-community",
   "main": "src/worker/index.ts",
   "compatibility_date": "2026-08-21",
+  "workers_dev": true,
   "assets": {
     "directory": "./dist/client",
     "not_found_handling": "single-page-application",
@@ -17,6 +18,16 @@
     }
   ],
   "vars": {
-    "BASE_URL": "https://dsh-community.yingking1018.workers.dev"
-  }
+    "BASE_URL": "https://dshcommunity.com"
+  },
+  "routes": [
+    {
+      "pattern": "dshcommunity.com",
+      "custom_domain": true
+    },
+    {
+      "pattern": "www.dshcommunity.com",
+      "custom_domain": true
+    }
+  ]
 }
