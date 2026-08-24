@@ -42,7 +42,7 @@ export function apply(ctx: Context, config: ModelCostConfig): void {
   const communityUrl = config.communityUrl?.trim() ?? ''
   void ctx.plugin(CommunityUsageService, {
     baseUrl: communityUrl.replace(/\/+$/u, ''),
-    pluginVersion: '0.2.0',
+    pluginVersion: '0.2.2',
     projection: resolved,
   })
 }

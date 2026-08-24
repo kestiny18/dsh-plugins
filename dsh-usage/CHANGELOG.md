@@ -2,6 +2,13 @@
 
 All notable changes to this project are documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.2] - 2026-08-24
+
+### Fixed
+
+- Rewrite persisted Community profile links to the configured Community origin so users upgrading from 0.2.0 no longer see the legacy `workers.dev` profile URL.
+- Report the current plugin version in Community aggregate snapshots.
+
 ## [0.2.1] - 2026-08-23
 
 ### Added
