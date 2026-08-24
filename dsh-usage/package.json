@@ -1,6 +1,6 @@
 {
   "name": "dsh-usage",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Replay-aware per-turn model usage and session cost for DeepSeek Harness",
   "type": "module",
   "engines": {

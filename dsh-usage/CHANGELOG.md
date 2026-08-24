@@ -2,6 +2,14 @@
 
 All notable changes to this project are documented in this file. The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project follows [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+## [0.2.4] - 2026-08-24
+
+### Fixed
+
+- Derive the Community protocol's plugin version from the installed package metadata instead of a release-specific string literal.
+
 ## [0.2.3] - 2026-08-24
 
 ### Added

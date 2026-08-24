@@ -9,6 +9,7 @@ import { resolveConfig } from './pricing.js'
 import { createModelCostProjection } from './projection.js'
 import { CommunityUsageService } from './community/service.js'
 import type { ModelCostConfig, ModelRateConfig } from './types.js'
+import { pluginVersion } from './version.js'
 
 export type * from './types.js'
 export { createModelCostProjection } from './projection.js'
@@ -42,7 +43,7 @@ export function apply(ctx: Context, config: ModelCostConfig): void {
   const communityUrl = config.communityUrl?.trim() ?? ''
   void ctx.plugin(CommunityUsageService, {
     baseUrl: communityUrl.replace(/\/+$/u, ''),
-    pluginVersion: '0.2.2',
+    pluginVersion,
     projection: resolved,
   })
 }
