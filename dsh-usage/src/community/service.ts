@@ -188,11 +188,15 @@ export class CommunityUsageService extends TypertRemoteService {
 
   private publicStatus(): CommunityStatus {
     const state = this.requireState().get()
+    const identity = state.identity === undefined || this.config.baseUrl.length === 0 ? state.identity : {
+      ...state.identity,
+      profileUrl: new URL(`/u/${encodeURIComponent(state.identity.githubLogin)}`, `${this.config.baseUrl}/`).toString(),
+    }
     return {
       configured: this.config.baseUrl.length > 0,
       joined: state.deviceCredential !== undefined,
       syncEnabled: state.syncEnabled,
-      ...(state.identity === undefined ? {} : { identity: state.identity }),
+      ...(identity === undefined ? {} : { identity }),
       ...(state.pendingLink === undefined ? {} : {
         link: {
           verificationUri: state.pendingLink.verificationUri,
