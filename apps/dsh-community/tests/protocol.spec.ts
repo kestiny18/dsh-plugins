@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { snapshotSchema } from '../src/shared.js'
 import { canonicalJson, openSecret, sealSecret, sha256 } from '../src/worker/crypto.js'
-import { periodStart, snapshotRevisionDecision } from '../src/worker/index.js'
+import { deviceVerificationUri, periodStart, snapshotRevisionDecision } from '../src/worker/index.js'
 
 describe('Community protocol boundary', () => {
   it('canonicalizes snapshot bodies and hashes them deterministically', async () => {
@@ -45,5 +45,12 @@ describe('Community protocol boundary', () => {
     expect(periodStart('7d', now)).toBe('2026-08-15')
     expect(periodStart('30d', now)).toBe('2026-07-23')
     expect(periodStart('all', now)).toBeUndefined()
+  })
+
+  it('starts device linking at GitHub OAuth while preserving the confirmation code', () => {
+    const verification = new URL(deviceVerificationUri('https://dshcommunity.com', 'ABCD-EFGH'))
+    expect(verification.origin).toBe('https://dshcommunity.com')
+    expect(verification.pathname).toBe('/auth/github/start')
+    expect(verification.searchParams.get('returnTo')).toBe('/link?code=ABCD-EFGH')
   })
 })

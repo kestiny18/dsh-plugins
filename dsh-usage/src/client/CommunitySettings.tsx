@@ -14,7 +14,7 @@ const copy = {
     join: '使用 GitHub 加入', joinHint: 'GitHub 身份绑定与数据上传是两个独立步骤。', connect: '连接 GitHub',
     browserHint: '浏览器没有自动打开？访问 Community 并输入', configHint: '部署 Community 后，请在 dsh-usage 插件配置中设置 communityUrl。',
     sync: 'Community 同步', never: '从未同步', last: '上次同步', cadence: '每 30 分钟上传绝对聚合快照', enable: '开启 Community 同步',
-    syncing: '同步中…', syncNow: '立即同步', profile: '查看主页', privacy: '不会上传提示词、消息、路径、主机名、费用或未归一化的私有模型名称。', failed: 'Community 请求失败。',
+    syncing: '同步中…', syncNow: '立即同步', profile: '查看主页', signOut: '退出登录', signOutHint: '仅断开当前 DSH，不删除账号或已上传数据。', privacy: '不会上传提示词、消息、路径、主机名、费用或未归一化的私有模型名称。', failed: 'Community 请求失败。',
   },
   en: {
     optional: 'OPTIONAL', title: 'DSH Community', intro: 'Share aggregate token totals for public rankings. Local Usage always works independently.',
@@ -23,7 +23,7 @@ const copy = {
     join: 'Join with GitHub', joinHint: 'Your GitHub identity is linked separately from uploading data.', connect: 'Connect GitHub',
     browserHint: 'Browser not open? Visit the Community and enter', configHint: 'Set communityUrl in the dsh-usage plugin config after deploying the Community app.',
     sync: 'Community Sync', never: 'Never synced', last: 'Last synced', cadence: 'Absolute aggregate snapshots every 30 minutes', enable: 'Enable Community Sync',
-    syncing: 'Syncing…', syncNow: 'Sync now', profile: 'View profile', privacy: 'No prompts, messages, paths, hostnames, cost, or raw private model names are uploaded.', failed: 'Community request failed.',
+    syncing: 'Syncing…', syncNow: 'Sync now', profile: 'View profile', signOut: 'Sign out', signOutHint: 'Disconnects this DSH only. Your account and uploaded data remain.', privacy: 'No prompts, messages, paths, hostnames, cost, or raw private model names are uploaded.', failed: 'Community request failed.',
   },
 } as const
 
@@ -98,7 +98,7 @@ export function CommunitySettings({ ctx }: { ctx: CommunityClientContext }) {
       : <>
         {status?.identity === undefined
           ? <div className={css.joinRow}><div><strong>{t.join}</strong><span>{t.joinHint}</span></div><button type="button" disabled={busy || status === undefined || status.configured === false} onClick={() => { void connect() }}>{t.connect}</button></div>
-          : <div className={css.identity}><img src={status.identity.avatarUrl} alt=""/><span><strong>{status.identity.displayName}</strong><small>@{status.identity.githubLogin}</small></span><a href={status.identity.profileUrl} target="_blank" rel="noreferrer">{t.profile}</a></div>}
+          : <div className={css.identity}><img src={status.identity.avatarUrl} alt=""/><span><strong>{status.identity.displayName}</strong><small>@{status.identity.githubLogin}</small></span><div className={css.identityActions}><a href={status.identity.profileUrl} target="_blank" rel="noreferrer">{t.profile}</a><button type="button" title={t.signOutHint} disabled={busy} onClick={() => { void call(() => ctx.remote.communityUsage.signOut({})) }}>{t.signOut}</button></div></div>}
         {status?.link !== undefined ? <p className={css.code}>{t.browserHint} <strong>{status.link.userCode}</strong>.</p> : null}
         {status?.configured === false ? <p className={css.error}>{t.configHint}</p> : null}
         <div className={css.syncRow}><div><strong>{t.sync}</strong><span>{lastSync} · {t.cadence}</span></div><label className={css.switch}><input type="checkbox" checked={status?.syncEnabled ?? false} disabled={busy || !status?.joined} onChange={(event) => { void call(() => ctx.remote.communityUsage.setSync({ enabled: event.target.checked })) }}/><span aria-hidden/><span className={css.srOnly}>{t.enable}</span></label></div>

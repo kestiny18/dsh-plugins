@@ -338,7 +338,13 @@ async function createDeviceLink(request: Request, env: Env): Promise<Response> {
     env.DB.prepare(`INSERT INTO device_links(id,device_code_hash,user_code,installation_id_hash,status,expires_at,created_at) VALUES(?,?,?,?, 'pending',?,?)`)
       .bind(crypto.randomUUID(), await sha256(deviceCode), userCode, await sha256(payload.installationId), expiresAt, Date.now()),
   ])
-  return json({ deviceCode, userCode, verificationUri: `${env.BASE_URL}/link?code=${encodeURIComponent(userCode)}`, expiresAt }, 201)
+  return json({ deviceCode, userCode, verificationUri: deviceVerificationUri(env.BASE_URL, userCode), expiresAt }, 201)
+}
+
+export function deviceVerificationUri(baseUrl: string, userCode: string): string {
+  const authorize = new URL('/auth/github/start', `${baseUrl}/`)
+  authorize.searchParams.set('returnTo', `/link?code=${encodeURIComponent(userCode)}`)
+  return authorize.toString()
 }
 
 async function approveDeviceLink(request: Request, env: Env): Promise<Response> {
@@ -446,6 +452,14 @@ async function acceptSnapshot(request: Request, env: Env): Promise<Response> {
   return json({ accepted: true, idempotent: false, revision: snapshot.revision })
 }
 
+async function logoutDevice(request: Request, env: Env): Promise<Response> {
+  const device = await authenticatedDevice(request, env)
+  const revokedCredentialHash = await sha256(randomToken(48))
+  await env.DB.prepare('UPDATE devices SET credential_hash=?,updated_at=? WHERE id=?')
+    .bind(revokedCredentialHash, Date.now(), device.id).run()
+  return json({ signedOut: true })
+}
+
 async function me(request: Request, env: Env): Promise<Response> {
   const current = await viewer(request, env)
   return json({ authenticated: current !== undefined, identity: current })
@@ -472,6 +486,7 @@ async function route(request: Request, env: Env): Promise<Response> {
   if (request.method === 'POST' && url.pathname === '/api/v1/device-links/approve') return await approveDeviceLink(request, env)
   if (request.method === 'POST' && url.pathname === '/api/v1/device-links/token') return await pollDeviceLink(request, env)
   if (request.method === 'PUT' && url.pathname === '/api/v1/snapshots') return await acceptSnapshot(request, env)
+  if (request.method === 'POST' && url.pathname === '/api/v1/device/logout') return await logoutDevice(request, env)
   if (request.method === 'POST' && url.pathname === '/api/v1/logout') return await logout(request, env)
   throw new HttpError(404, 'API route not found.')
 }

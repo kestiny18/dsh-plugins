@@ -4,7 +4,7 @@ import type { DomainGlobal } from '@deepseek-ai/dsh-storage-domain'
 import { Remote, TypertRemoteService } from '@deepseek-ai/dsh-typert-protocol'
 import type { ResolvedModelCostConfig } from '../pricing.js'
 import { buildCommunitySnapshot } from './snapshot.js'
-import { communityStateDomainSpec } from './state.js'
+import { communityStateDomainSpec, signedOutCommunityState } from './state.js'
 import type { CommunityState } from './state.js'
 import type {
   CommunityEmptyRequest,
@@ -137,6 +137,27 @@ export class CommunityUsageService extends TypertRemoteService {
     return await this.runSync()
   }
 
+  async signOut(_request: CommunityEmptyRequest): Promise<CommunityResult<CommunityStatus>> {
+    const current = this.requireState().get()
+    await this.replaceState({ syncEnabled: false, lastError: undefined })
+    await this.activeSync?.catch(() => undefined)
+    if (current.deviceCredential === undefined) {
+      await this.requireState().set(signedOutCommunityState(this.requireState().get()))
+      return { ok: true, value: this.publicStatus() }
+    }
+    try {
+      await this.request('/api/v1/device/logout', {
+        method: 'POST',
+        headers: { authorization: `Bearer ${current.deviceCredential}` },
+        body: '{}',
+      })
+      await this.requireState().set(signedOutCommunityState(this.requireState().get()))
+      return { ok: true, value: this.publicStatus() }
+    } catch (error) {
+      return await this.recordFailure(error)
+    }
+  }
+
   private runSync(): Promise<CommunityResult<CommunityStatus>> {
     if (this.activeSync !== undefined) return this.activeSync
     const operation = this.performSync()
@@ -247,7 +268,7 @@ export class CommunityUsageService extends TypertRemoteService {
   }
 }
 
-type CommunityRemoteMethod = 'status' | 'startLink' | 'pollLink' | 'setSync' | 'syncNow'
+type CommunityRemoteMethod = 'status' | 'startLink' | 'pollLink' | 'setSync' | 'syncNow' | 'signOut'
 
 /** Apply standard Remote markers without shipping decorator syntax to Node. */
 function markCommunityRemote(method: CommunityRemoteMethod): void {
@@ -269,4 +290,4 @@ function markCommunityRemote(method: CommunityRemoteMethod): void {
   initializer.call(Object.create(prototype) as object)
 }
 
-for (const method of ['status', 'startLink', 'pollLink', 'setSync', 'syncNow'] as const) markCommunityRemote(method)
+for (const method of ['status', 'startLink', 'pollLink', 'setSync', 'syncNow', 'signOut'] as const) markCommunityRemote(method)

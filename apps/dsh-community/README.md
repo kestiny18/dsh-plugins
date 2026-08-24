@@ -9,6 +9,8 @@ Production origin: [https://dshcommunity.com](https://dshcommunity.com). The `wo
 - `/` is public and defaults to the rolling 7-day UTC leaderboard.
 - `/u/:githubLogin` is public after that user completes a successful non-zero sync.
 - GitHub login personalizes the board and provides a fixed **Your standing** panel; login alone never starts uploading.
+- Plugin device linking enters GitHub OAuth directly, then returns to the explicit device confirmation page.
+- Signing out from the plugin revokes only that installation's credential and preserves its accepted aggregate rows.
 - Device/day and device/provider/model keys use absolute upsert semantics. A matching revision and digest is idempotent, a matching revision with another digest conflicts, and older revisions are rejected.
 - Omitted keys are retained in V1. There is no remote delete/Leave flow yet.
 - Rankings are explicitly self-reported. Cost, prompts, responses, session metadata, and private model routes are not accepted.
