@@ -37,6 +37,7 @@ interface CommunityRemoteNamespace {
   pollLink(request: CommunityEmptyRequest): Promise<RemoteResult<CommunityResult<CommunityStatus>>>
   setSync(request: CommunitySyncRequest): Promise<RemoteResult<CommunityResult<CommunityStatus>>>
   syncNow(request: CommunityEmptyRequest): Promise<RemoteResult<CommunityResult<CommunityStatus>>>
+  signOut(request: CommunityEmptyRequest): Promise<RemoteResult<CommunityResult<CommunityStatus>>>
 }
 
 export interface CommunityClientContext extends Context {
@@ -68,5 +69,6 @@ export const TYPERT_REMOTE: TypertRemoteContribution = {
     descriptor('pollLink', requestSchema),
     descriptor('setSync', syncRequestSchema),
     descriptor('syncNow', requestSchema),
+    descriptor('signOut', requestSchema),
   ],
 }

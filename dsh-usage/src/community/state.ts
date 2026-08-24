@@ -39,6 +39,19 @@ export const communityStateSchema = z.object({
 
 export type CommunityState = z.infer<typeof communityStateSchema>
 
+export function signedOutCommunityState(state: CommunityState): CommunityState {
+  const next = {
+    ...state,
+    syncEnabled: false,
+  }
+  delete next.deviceCredential
+  delete next.identity
+  delete next.pendingLink
+  delete next.pendingSnapshot
+  delete next.lastError
+  return next
+}
+
 export const communityStateDomainSpec = defineDomain({
   name: 'dsh_usage_community',
   version: 1,

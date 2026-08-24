@@ -54,7 +54,7 @@ describe('plugin registration', () => {
   it('publishes the complete Community RPC surface without decorator syntax', () => {
     const service = Object.create(CommunityUsageService.prototype) as object
     expect(remoteMethods(service).map(marker => marker.exportName ?? marker.method)).toEqual([
-      'status', 'startLink', 'pollLink', 'setSync', 'syncNow',
+      'status', 'startLink', 'pollLink', 'setSync', 'syncNow', 'signOut',
     ])
     expect(TYPERT.package).toBe('dsh-usage')
     expect(TYPERT.face).toBe('host')
@@ -65,6 +65,7 @@ describe('plugin registration', () => {
       'communityUsage/pollLink',
       'communityUsage/setSync',
       'communityUsage/syncNow',
+      'communityUsage/signOut',
     ])
   })
 })

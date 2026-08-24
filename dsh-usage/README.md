@@ -44,7 +44,7 @@ Community uploads contain UTC daily totals and normalized model totals: request 
 
 Forked and sub-Agent sessions are counted from their durable lineage boundary: inherited seed events are subtracted, while the child's new calls—including provider-reported cache reads—remain in the snapshot. Retries use absolute replacement totals and a stable revision/digest, so the Community never adds the same device/day snapshot twice.
 
-Sync failures are shown in settings and never interrupt local session projection, turn footers, cost estimates, or the Usage page. Turning Sync off stops future uploads; V1 does not delete previously accepted Community data.
+Sync failures are shown in settings and never interrupt local session projection, turn footers, cost estimates, or the Usage page. Turning Sync off stops future uploads. **Sign out** in Settings revokes this installation's device credential, clears its local GitHub identity, and turns Sync off; it does not delete the Community account or previously accepted aggregate data. V1 does not delete previously accepted Community data.
 
 If Node cannot reach the Community directly, configure the proxy in the environment that launches DSH. Node 22.21+ and Node 24 can use standard `HTTP_PROXY` / `HTTPS_PROXY` variables when `NODE_USE_ENV_PROXY=1` is also set. The plugin does not read or change operating-system proxy settings.
 
