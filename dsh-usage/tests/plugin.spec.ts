@@ -1,10 +1,13 @@
 import { describe, expect, it, vi } from 'vitest'
+import { readFileSync } from 'node:fs'
 import type { Context } from '@deepseek-ai/cordis'
 import { remoteMethods } from '@deepseek-ai/dsh-typert-protocol'
 import { apply, inject } from '../src/index.js'
 import { CommunityUsageService } from '../src/community/service.js'
 import { TYPERT_REMOTE } from '../src/community/remote.js'
 import { TYPERT } from '../src/community/typert.js'
+
+const packageVersion = (JSON.parse(readFileSync(new URL('../package.json', import.meta.url), 'utf8')) as { version: string }).version
 
 describe('plugin registration', () => {
   it('registers the local projection and mounts the isolated Community service', () => {
@@ -23,14 +26,14 @@ describe('plugin registration', () => {
     expect(register).toHaveBeenCalledOnce()
     expect(plugin).toHaveBeenCalledWith(CommunityUsageService, expect.objectContaining({
       baseUrl: 'https://dshcommunity.com',
-      pluginVersion: '0.2.2',
+      pluginVersion: packageVersion,
     }))
   })
 
   it('rewrites a persisted legacy profile link to the configured Community origin', async () => {
     const service = Object.create(CommunityUsageService.prototype) as CommunityUsageService
     Object.assign(service, {
-      config: { baseUrl: 'https://dshcommunity.com', pluginVersion: '0.2.2', projection: {} },
+      config: { baseUrl: 'https://dshcommunity.com', pluginVersion: packageVersion, projection: {} },
       state: {
         get: () => ({
           installationId: '00000000-0000-4000-8000-000000000000',
