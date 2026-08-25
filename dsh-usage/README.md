@@ -21,10 +21,10 @@ Requirements: Node.js 22.18 or newer and an existing DeepSeek Harness Web profil
 
 ### Using Harness through npx
 
-Copy and run these commands from PowerShell, Command Prompt, or a terminal. No global `dsh` or pnpm installation is required:
+Copy and run these commands from PowerShell, Command Prompt, or a terminal. No global `dsh` or pnpm installation is required. These commands pin the verified pnpm 11.9.0 installation baseline; do not substitute pnpm 11.7.0, which can fail while installing the plugin:
 
 ```powershell
-npx --yes --package=@deepseek-ai/dsh --package=pnpm@11.7.0 -- dsh plugin --profile web add dsh-usage
+npx --yes --package=@deepseek-ai/dsh --package=pnpm@11.9.0 -- dsh plugin --profile web add dsh-usage
 npx --yes @deepseek-ai/dsh --profile web --dump-config
 npx --yes @deepseek-ai/dsh --profile web
 ```
@@ -73,7 +73,7 @@ pnpm dsh --profile web
 Run the same `plugin add` command again, then restart Harness:
 
 ```powershell
-npx --yes --package=@deepseek-ai/dsh --package=pnpm@11.7.0 -- dsh plugin --profile web add dsh-usage
+npx --yes --package=@deepseek-ai/dsh --package=pnpm@11.9.0 -- dsh plugin --profile web add dsh-usage
 ```
 
 If `dsh` is not recognized, use the npx command above instead of the global-install form. If the Usage page does not appear after installation, stop and restart the running Harness process.
@@ -86,7 +86,7 @@ Install dependencies from the monorepo root, then build and verify this package:
 pnpm install --frozen-lockfile
 pnpm --filter dsh-usage run check
 cd dsh-usage
-npx --yes --package=@deepseek-ai/dsh --package=pnpm@11.7.0 -- dsh plugin --profile web add .
+npx --yes --package=@deepseek-ai/dsh --package=pnpm@11.9.0 -- dsh plugin --profile web add .
 npx --yes @deepseek-ai/dsh --profile web --dump-config
 npx --yes @deepseek-ai/dsh --profile web
 ```
