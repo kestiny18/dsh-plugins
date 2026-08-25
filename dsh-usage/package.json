@@ -1,7 +1,7 @@
 {
   "name": "dsh-usage",
-  "version": "0.2.4",
-  "description": "Replay-aware per-turn model usage and session cost for DeepSeek Harness",
+  "version": "0.2.5",
+  "description": "Token usage, estimated cost, and a 52-week activity dashboard for DeepSeek Harness Web",
   "type": "module",
   "engines": {
     "node": ">=22.18.0",
@@ -35,6 +35,8 @@
     "lib/**/*.d.ts.map",
     "cordis.patch.yml",
     "README.md",
+    "README.zh-CN.md",
+    "docs/**/*.md",
     "CHANGELOG.md",
     "LICENSE"
   ],

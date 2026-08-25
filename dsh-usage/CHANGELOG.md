@@ -4,6 +4,18 @@ All notable changes to this project are documented in this file. The format is b
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-08-26
+
+### Added
+
+- Add a Simplified Chinese product README, Usage and Community screenshots, and focused installation, accounting, and pricing guides.
+
+### Changed
+
+- Streamline the default GitHub/npm README around product value, one recommended install path, privacy boundaries, and advanced-documentation links.
+- Pin public npx installation examples to the verified pnpm 11.9.0 baseline instead of pnpm 11.7.0.
+- Use a user-facing npm package description focused on the Usage dashboard and estimated cost.
+
 ## [0.2.4] - 2026-08-24
 
 ### Fixed
