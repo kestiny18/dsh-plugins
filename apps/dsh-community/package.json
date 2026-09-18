@@ -23,12 +23,12 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@cloudflare/vitest-plugin": "^1.0.0",
-    "@cloudflare/workers-types": "^5.20260823.1",
+    "@cloudflare/vitest-plugin": "^1.1.10",
+    "@cloudflare/workers-types": "^5.20260915.1",
     "@types/react": "^19.1.10",
     "@types/react-dom": "^19.1.7",
-    "typescript": "^6.0.3",
-    "vitest": "^4.1.8",
-    "wrangler": "^4.31.0"
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.1",
+    "wrangler": "^4.132.0"
   }
 }
